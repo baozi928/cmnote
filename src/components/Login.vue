@@ -18,7 +18,7 @@
             <transition name="slide">
               <div v-bind:class="{show: isShowLogin}" class="login">
                 <input type="text" v-model="login.username" placeholder="输入用户名">
-                <input type="password" v-model="login.password" @keyup.enter="onLogin" placeholder="密码">
+                <input type="password" v-model="login.password" @keyup.enter="onLogin"  placeholder="密码">
                 <p v-bind:class="{error: login.isError}"> {{login.notice}}</p>
                 <div class="button" @click="onLogin"> 登录</div>
               </div>
@@ -32,6 +32,7 @@
 
 <script>
   import Auth from '@/apis/auth'
+  import Bus from '@/helpers/bus'
 
   Auth.getInfo()
     .then(data => {
@@ -76,14 +77,18 @@
           this.register.notice = '密码长度为6~16个字符'
           return
         }
-        this.register.isError = false
-        this.register.notice = ''
-        console.log(`start register..., username: ${this.register.username} , password: ${this.register.password}`)
+
         Auth.register({
           username: this.register.username,
           password: this.register.password
         }).then(data => {
-          console.log(data)
+          this.register.isError = false
+          this.register.notice = ''
+          Bus.$emit('userInfo', { username: this.login.username })
+          this.$router.push({ path: 'notebooks' })
+        }).catch(data => {
+          this.register.isError = true
+          this.register.notice = data.msg
         })
       },
 
@@ -98,15 +103,19 @@
           this.login.notice = '密码长度为6~16个字符'
           return
         }
-        this.login.isError = false
-        this.login.notice = ''
 
-        console.log(`start login..., username: ${this.login.username} , password: ${this.login.password}`)
+
         Auth.login({
           username: this.login.username,
           password: this.login.password
         }).then(data => {
-          console.log(data)
+          this.login.isError = false
+          this.login.notice = ''
+          Bus.$emit('userInfo', { username: this.login.username })
+          this.$router.push({ path: 'notebooks' })
+        }).catch(data => {
+          this.login.isError = true
+          this.login.notice = data.msg
         })
       }
     }
