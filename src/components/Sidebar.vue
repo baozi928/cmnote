@@ -19,7 +19,7 @@
 
   export default {
     components: {
-      avatar,
+      avatar
     },
 
     methods: {
@@ -50,11 +50,11 @@
       padding: 6px 0;
       display: block;
     }
-    .router-link-active {
-      background-color: #5e6266;
-    }
   }
 
+  .icons .router-link-active {
+    background-color: #5e6266;
+  }
   .logout {
     position: absolute;
     bottom: 20px;

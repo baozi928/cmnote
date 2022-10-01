@@ -28,14 +28,17 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
+
   import Auth from '@/apis/auth'
   import Bus from '@/helpers/bus'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
-    data() {
+    data(){
       return {
         isShowLogin: true,
         isShowRegister: false,
@@ -54,33 +57,37 @@
       }
     },
     methods: {
-      showLogin() {
+      ...mapActions({
+        loginUser: 'login',
+        registerUser: 'register'
+      }),
+
+      showLogin(){
         this.isShowLogin = true
         this.isShowRegister = false
       },
-      showRegister() {
+      showRegister(){
         this.isShowLogin = false
         this.isShowRegister = true
       },
-      onRegister() {
-        if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.register.username)) {
+      onRegister(){
+        if(!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.register.username)){
           this.register.isError = true
           this.register.notice = '用户名3~15个字符，仅限于字母数字下划线中文'
           return
         }
-        if (!/^.{6,16}$/.test(this.register.password)) {
+        if(!/^.{6,16}$/.test(this.register.password)){
           this.register.isError = true
           this.register.notice = '密码长度为6~16个字符'
           return
         }
 
-        Auth.register({
+        this.registerUser({
           username: this.register.username,
           password: this.register.password
-        }).then(data => {
+        }).then(() => {
           this.register.isError = false
           this.register.notice = ''
-          Bus.$emit('userInfo', { username: this.login.username })
           this.$router.push({ path: 'notebooks' })
         }).catch(data => {
           this.register.isError = true
@@ -88,26 +95,24 @@
         })
       },
 
-      onLogin() {
-        if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.login.username)) {
+      onLogin(){
+        if(!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.login.username)){
           this.login.isError = true
           this.login.notice = '用户名3~15个字符，仅限于字母数字下划线中文'
           return
         }
-        if (!/^.{6,16}$/.test(this.login.password)) {
+        if(!/^.{6,16}$/.test(this.login.password)){
           this.login.isError = true
           this.login.notice = '密码长度为6~16个字符'
           return
         }
 
-
-        Auth.login({
+        this.loginUser({
           username: this.login.username,
           password: this.login.password
-        }).then(data => {
+        }).then(() => {
           this.login.isError = false
           this.login.notice = ''
-          Bus.$emit('userInfo', { username: this.login.username })
           this.$router.push({ path: 'notebooks' })
         }).catch(data => {
           this.login.isError = true
@@ -115,12 +120,12 @@
         })
       }
     }
-
   }
 </script>
 
-<style lang="less">
 
+
+<style lang="less">
   .modal-mask {
     position: fixed;
     z-index: 100;
@@ -132,12 +137,10 @@
     display: table;
     transition: opacity .3s ease;
   }
-
   .modal-wrapper {
     display: table-cell;
     vertical-align: middle;
   }
-
   .modal-container {
     width: 800px;
     height: 500px;
@@ -148,18 +151,15 @@
     transition: all .3s ease;
     font-family: Helvetica, Arial, sans-serif;
     display: flex;
-
     .main {
       flex: 1;
       background: #36bc64 url(//cloud.hunger-valley.com/17-12-13/38476998.jpg-middle) center center no-repeat;
       background-size: contain;
     }
-
     .form {
       width: 270px;
       border-left: 1px solid #ccc;
       overflow: hidden;
-
       h3 {
         padding: 10px 20px;
         margin-top: -1px;
@@ -167,12 +167,10 @@
         font-size: 16px;
         border-top: 1px solid #eee;
         cursor: pointer;
-
-        &:nth-of-type(2) {
+        &:nth-of-type(2){
           border-bottom: 1px solid #eee;
         }
       }
-
       .button {
         background-color: #2bb964;
         height: 36px;
@@ -184,18 +182,15 @@
         margin-top: 18px;
         cursor: pointer;
       }
-
-      .login, .register {
+      .login,.register {
         padding: 0px 20px;
         border-top: 1px solid #eee;
         height: 0;
         overflow: hidden;
         transition: height .4s;
-
         &.show {
           height: 193px;
         }
-
         input {
           display: block;
           width: 100%;
@@ -208,27 +203,21 @@
           font-size: 14px;
           margin-top: 10px;
         }
-
         input:focus {
           border: 3px solid #9dcaf8;
         }
-
         p {
           font-size: 12px;
           margin-top: 10px;
           color: #444;
         }
-
         .error {
           color: red;
         }
       }
-
       .login {
         border-top: 0;
       }
     }
   }
-
 </style>
-
