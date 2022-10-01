@@ -39,6 +39,13 @@
           return this.getNotes({ notebookId: this.curBook.id})
         }).then(() => {
         this.setCurNote({ curNoteId: this.$route.query.noteId })
+        this.$router.replace({
+          path: '/note',
+          query: {
+            noteId: this.curNote.id,
+            notebookId: this.curBook.id
+          }
+        })
       })
     },
 
@@ -50,7 +57,8 @@
       ...mapGetters([
         'notebooks',
         'notes',
-        'curBook'
+        'curBook',
+        'curNote'
       ])
     },
 
