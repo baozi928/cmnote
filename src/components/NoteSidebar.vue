@@ -79,7 +79,16 @@
           return this.$router.push({ path: '/trash'})
         }
         this.$store.commit('setCurBook', { curBookId: notebookId})
-        this.getNotes({ notebookId })
+        this.getNotes({ notebookId }).then(() => {
+          this.setCurNote()
+          this.$router.replace({
+            path: '/note',
+            query: {
+              noteId: this.curNote.id,
+              notebookId: this.curBook.id
+            }
+          })
+        })
       },
 
       onAddNote() {

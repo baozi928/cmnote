@@ -84,6 +84,7 @@
       }, 300),
 
       onDeleteNote() {
+        if(!this.curNote.id) return
         this.deleteNote({ noteId: this.curNote.id })
           .then(data => {
             this.$router.replace({ path: '/note' })
